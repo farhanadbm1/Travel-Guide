@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link
+      href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+      id="bootstrap-css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
+    <link rel="stylesheet" type="text/css" href="g.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script
+      defer
+      src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=###yourapikey###"
+      type="text/javascript"
+    ></script>
+    <link rel="stylesheet" type="text/css" href="r.css">
+
+  </head>
+  <body class="gbody">
+    <header class="ghead">
+      <nav>
+        <div class="logo">
+          <span class="s" style="font-size: 60px">t</span>
+          <h1 style="font-size: 30px">RAVEL</h1>
+        </div>
+        <div class="menu">
+          <a href="index.php" style="font-size: 20px">Home</a>
+          <a href="galary.html">gallery</a>
+          <a href="service.html">services</a>
+          <a href="blog.html">blog</a>
+          <a href="about.html">about</a>
+          <a href="review.html">review</a>
+          <a href="contact.html">contact</a>
+        </div>
+        <input
+          type="search"
+          name="search"
+          id="search-bar"
+          placeholder="       Search here"
+        />
+        <label for="search-bar"></label>
+
+        <div class="icon">
+          <i class="fas fa-search" id="search-btn"></i>
+          <a href="login.html"><i class="fas fa-user" id="login-btn"></i></a>
+        </div>
+      </nav>
+    </header>
+    <!--sevice-->
+
+    <section class="bari">
+      <form id="distance_form">
+        <h1>
+          Do you want to see the root and actual distance, fill up the form
+        </h1>
+        <br />
+        <div class="input-group">
+          <input
+            type="text"
+            id="from"
+            required
+            class="form-control"
+            id="from_places"
+            placeholder="Enter a location"
+          />
+          <input id="origin" name="origin" required="" type="hidden" />
+
+          <label for="from">From</label>
+        </div>
+        <br />
+        <div class="input-group">
+          <input
+            type="text"
+            required
+            class="form-control"
+            id="to_places"
+            placeholder="Enter a location"
+          />
+          <input
+            id="destination"
+            name="destination"
+            required=""
+            type="hidden"
+          />
+          <label for="to">To</label>
+        </div>
+        <br />
+        <button type="submit">SUBMIT</button>
+      </form>
+    </section>
+    <div id="result">
+        <ul class="list-group">
+          <li
+            id="mile"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            Distance In Mile :
+          </li>
+          <li
+            id="kilo"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            Distance is Kilo:
+          </li>
+          <li
+            id="text"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            IN TEXT:
+          </li>
+          <li
+            id="minute"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            IN MINUTES:
+          </li>
+          <li
+            id="from"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            FROM:
+          </li>
+          <li
+            id="to"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            TO:
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(function () {
+    // add input listeners
+    google.maps.event.addDomListener(window, "load", function () {
+      var from_places = new google.maps.places.Autocomplete(
+        document.getElementById("from_places")
+      );
+      var to_places = new google.maps.places.Autocomplete(
+        document.getElementById("to_places")
+      );
+
+      google.maps.event.addListener(
+        from_places,
+        "place_changed",
+        function () {
+          var from_place = from_places.getPlace();
+          var from_address = from_place.formatted_address;
+          $("#origin").val(from_address);
+        }
+      );
+
+      google.maps.event.addListener(
+        to_places,
+        "place_changed",
+        function () {
+          var to_place = to_places.getPlace();
+          var to_address = to_place.formatted_address;
+          $("#destination").val(to_address);
+        }
+      );
+    });
+    // calculate distance
+    function calculateDistance() {
+      var origin = $("#origin").val();
+      var destination = $("#destination").val();
+      var service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix(
+        {
+          origins: [origin],
+          destinations: [destination],
+          travelMode: google.maps.TravelMode.DRIVING,
+          unitSystem: google.maps.UnitSystem.IMPERIAL, // miles and feet.
+          // unitSystem: google.maps.UnitSystem.metric, // kilometers and meters.
+          avoidHighways: false,
+          avoidTolls: false,
+        },
+        callback
+      );
+    }
+    // get distance results
+    function callback(response, status) {
+      if (status != google.maps.DistanceMatrixStatus.OK) {
+        $("#result").html(err);
+      } else {
+        var origin = response.originAddresses[0];
+        console.log(origin);
+        var destination = response.destinationAddresses[0];
+        console.log(destination);
+        if (response.rows[0].elements[0].status === "ZERO_RESULTS") {
+          $("#result").html(
+            "Better get on a plane. There are no roads between " +
+              origin +
+              " and " +
+              destination
+          );
+        } else {
+          var distance = response.rows[0].elements[0].distance;
+          console.log(distance);
+          var duration = response.rows[0].elements[0].duration;
+          console.log(duration);
+          console.log(response.rows[0].elements[0].distance);
+          var distance_in_kilo = distance.value / 1000; // the kilom
+          var distance_in_mile = distance.value / 1609.34; // the mile
+          console.log(distance_in_kilo);
+          console.log(distance_in_mile);
+          var duration_text = duration.text;
+          var duration_value = duration.value;
+          $("#mile").html(
+            `Distance in Miles: ${distance_in_mile.toFixed(2)}`
+          );
+          $("#kilo").html(
+            `Distance in Kilometre: ${distance_in_kilo.toFixed(2)}`
+          );
+          $("#text").html(`Distance in Text: ${duration_text}`);
+          $("#minute").html(`Distance in Minutes: ${duration_value}`);
+          $("#from").html(`Distance From: ${origin}`);
+          $("#to").text(`Distance to: ${destination}`);
+        }
+      }
+    }
+    // print results on submit the form
+    $("#distance_form").submit(function (e) {
+      e.preventDefault();
+      calculateDistance();
+    });
+  });
+</script>
+
+    <!--footer section start-->
+
+    
+    <footer class="rfooter">
+      <table class="rmaster-box">
+        <tr>
+          <th class="rbox-header"><h3>About us</h3></th>
+          <th class="rbox-header"><h3>Location</h3></th>
+          <th class="rbox-header"><h3>Quick links</h3></th>
+          <th class="rbox-header"><h3>Follow us</h3></th>
+        </tr>
+        <tr>
+          <td class="rbox1">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
+              optio officia ducimus tempore laborum. Sed nemo blanditiis, in,
+              culpa debitis perferendis quas ipsum explicabo consequuntur
+              repudiandae facere, tenetur asperiores mollitia.
+            </p>
+          </td>
+          <td class="rbox1">
+            <a href="#">Jashore, Khulna, Bangladesh</a>
+          </td>
+          <td class="rbox1">
+            <a href="index.php">Home </a><br />
+            <a href="about.html">About </a><br />
+            <a href="service.html">Services </a><br />
+            <a href="blog.html">Blog </a><br />
+            <a href="galar.html">Galary </a><br />
+            <a href="review.html">Review </a><br />
+            <a href="contact.html">Contact</a><br />
+          </td>
+          <td class="rbox1">
+            <div>
+              <a href="#">Facebook </a><br />
+              <a href="#">Instawgram </a><br />
+              <a href="#">Linkedin </a><br />
+              <a href="#">Twitter </a><br />
+            </div>
+          </td>
+        </tr>
+        <tr></tr>
+      </table>
+
+      <section class="rfooter1">
+        <h1 class="rcredit">
+          Created by <span> Farhana Bushra Nuha </span>| all right reserved
+        </h1>
+      </section>
+    </footer>
+  </body>
+</html>

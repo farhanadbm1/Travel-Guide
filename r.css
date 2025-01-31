@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Josefin Sans", sans-serif;
+}
+table {
+  display: table;
+  border-collapse: separate;
+  box-sizing: border-box;
+  text-indent: initial;
+  border-spacing: 2px;
+  border-color: grey;
+}
+.rfooter {
+  display: block;
+  text-align: center;
+  border-top: 0.2px solid rgba(241, 247, 249, 0.3);
+  font-size: 16px;
+  font-weight: normal;
+  color: aliceblue;
+  padding: 5px;
+}
+
+.rmaster-box {
+  width: 100%;
+  background-color: gray;
+  color: white;
+}
+
+.footer1 .credit {
+  text-align: center;
+  border-top: 0.2px solid rgba(241, 247, 249, 0.3);
+  font-size: 16px;
+  font-weight: normal;
+  color: aliceblue;
+  padding: 5px;
+}
+
+.rbox-header {
+  width: 25%;
+  padding: 10px;
+  margin-top: 10px;
+}
+span {
+  color: #ffa500;
+}
+
+section h1 {
+  margin: 30px 0 20px 0;
+  font-size: 55px;
+  font-weight: 700;
+  text-shadow: 2px 1px 5px black;
+  text-transform: uppercase;
+}
+.rfooter1 {
+  text-align: center;
+  border-top: 0.2px solid rgba(241, 247, 249, 0.3);
+  font-weight: normal;
+  color: aliceblue;
+  padding: 5px;
+  width: 100%;
+  bottom: 0;
+  text-align: center;
+  background-color: #333;
+  color: #ddd;
+  position: relative;
+}
+
+.rcredit {
+  text-align: center;
+  border-top: 0.2px solid rgba(241, 247, 249, 0.3);
+  font-size: 16px;
+  font-weight: normal;
+  color: aliceblue;
+  padding: 5px;
+}
